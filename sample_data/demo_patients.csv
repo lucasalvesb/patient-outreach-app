@@ -1,0 +1,24 @@
+Account No,Patient Name,DOB,Clinic,Visit Type,Last Visit
+AB1001,Jane Testperson,1980-02-14,Maple Clinic,Annual Physical,2024-09-10
+AB1001,Jane Testperson,1980-02-14,Maple Clinic,Diabetes Follow-Up,2025-03-01
+AB1003,Marcus Sample,1967-07-22,Oak Clinic,Blood Pressure Check,2025-01-18
+AB1003,Marcus Sample,1967-07-22,Oak Clinic,Annual Physical,2024-06-30
+AB1004,"Okafor, Grace",1992-11-05,Birch Family Medicine,Annual Physical,2024-11-12
+AB1005,Priya Placeholder,1958-03-29,Cedar Health Center,Mammogram Screening,2024-04-02
+AB1005,Priya Placeholder,1958-03-29,Cedar Health Center,Colonoscopy Screening,2016-05-20
+AB1012,Noor Fakename,2001-06-23,Oak Clinic,Flu Shot,2024-09-15
+ab1006 ,Tomás Example,04/17/1985,maple clinic,flu shot,2024-10-01
+AB1007,Riley Fictional,2019-08-08,Birch Family Medicine,Well-Child Visit,2025-02-14
+AB1008,Hana Demo,1949-12-01,Oak Clinic,Diabetes Follow-Up,2025-04-09
+AB1008,Hana Demo,1949-12-01,Oak Clinic,Blood Pressure Check,2025-04-09
+AB1009,Luis Mockup,1973-05-16,Cedar Health Center,Annual Physical,2023-12-19
+AB1010,Ada Notreal,1988-09-30,Maple Clinic,Annual Physical,2024-08-27
+AB1011,Wen Testcase,1963-02-11,Birch Family Medicine,Colonoscopy Screening,2015-07-07
+AB1013,Eli Sampleton,1979-10-10,Cedar Health Center,Blood Pressure Check,2025-05-02
+AB1001,Jane Testperson,02/14/1980,MAPLE CLINIC,annual physical,2024-09-10
+AB1014,Kim Draft,1990-02-30,Maple Clinic,Annual Physical,2025-01-05
+,Missing Account,1990-01-01,Oak Clinic,Flu Shot,2025-02-01
+AB1015,Future Visit,1984-04-04,Oak Clinic,Annual Physical,2030-01-01
+AB1003,Marcus Sample,1967-07-23,Oak Clinic,Flu Shot,2024-10-20
+AB1016,Lee, Pat,1975-01-05,Oak Clinic,Annual Physical,2025-01-05
+AB1017,Sky Nobody,1995-07-19,,Annual Physical,2025-03-03
