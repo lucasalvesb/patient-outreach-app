@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+backend/staticfiles/
+
+# Node
+node_modules/
+frontend/dist/
+frontend/coverage/
+
+# Env / local
+.env
+*.log
+.playwright-mcp/
+.DS_Store
+.idea/
+.vscode/

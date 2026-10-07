@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: outreach
+      POSTGRES_USER: outreach
+      POSTGRES_PASSWORD: outreach
+    ports:
+      # Published on 5433 so a locally installed Postgres on 5432 doesn't clash.
+      # Local (non-Docker) development of the backend connects here.
+      - "${POSTGRES_HOST_PORT:-5433}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U outreach -d outreach"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  pgdata:
