@@ -4,6 +4,7 @@ import { Link, useSearchParams } from "react-router";
 import type { ApiError } from "../api/client";
 import { api, type AdminPatientFilters } from "../api/endpoints";
 import type { AdminPatient, User } from "../api/types";
+import { ClampedText } from "../components/ClampedText";
 import { EmptyState } from "../components/EmptyState";
 import { Pagination } from "../components/Pagination";
 import { RecordPanel } from "../components/RecordPanel";
@@ -192,12 +193,12 @@ export function AdminPatientsPage() {
                     <Fragment key={patient.id}>
                       <tr className={isOpen ? "row--expanded" : undefined}>
                         <td>
-                          <span className="patient-name">{patient.name}</span>
-                          <span className="account">{patient.account_number}</span>
+                          <ClampedText className="patient-name">{patient.name}</ClampedText>
+                          <ClampedText className="account">{patient.account_number}</ClampedText>
                         </td>
                         <td data-label="Assigned to">
                           {patient.assigned_to ? (
-                            patient.assigned_to.display_name
+                            <ClampedText>{patient.assigned_to.display_name}</ClampedText>
                           ) : (
                             <span className="muted">{patient.open_record_count > 0 ? "In the pool" : "Nobody"}</span>
                           )}
@@ -208,8 +209,12 @@ export function AdminPatientsPage() {
                         <td className="numeric" data-label="Closed">
                           {patient.closed_record_count}
                         </td>
-                        <td data-label="Clinics">{patient.clinics.join(", ")}</td>
-                        <td data-label="Visit types">{patient.visit_types.join(", ")}</td>
+                        <td data-label="Clinics">
+                          <ClampedText>{patient.clinics.join(", ")}</ClampedText>
+                        </td>
+                        <td data-label="Visit types">
+                          <ClampedText>{patient.visit_types.join(", ")}</ClampedText>
+                        </td>
                         <td className="numeric" data-label="Last call">
                           {patient.last_action_at ? (
                             formatDateTime(patient.last_action_at)
@@ -256,6 +261,11 @@ function PatientAdminDetail({ patient, agents }: { patient: AdminPatient; agents
     <div className="admin-detail">
       <div className="admin-detail__side">
         <dl className="identity identity--stacked">
+          {/* In full here, since the table cuts very long names short. */}
+          <div>
+            <dt>Name</dt>
+            <dd>{patient.name}</dd>
+          </div>
           <div>
             <dt>DOB</dt>
             <dd>{formatDate(patient.dob)}</dd>

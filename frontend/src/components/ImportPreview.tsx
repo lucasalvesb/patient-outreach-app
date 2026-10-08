@@ -1,5 +1,6 @@
 import { useId, useState } from "react";
 import type { ImportBatchDetail, ImportOutcome, ImportRow } from "../api/types";
+import { ClampedText } from "./ClampedText";
 
 type Filter = "all" | ImportOutcome;
 
@@ -136,7 +137,7 @@ function ImportRowView({ row, committed }: { row: ImportRow; committed: boolean 
 function Value({ value, numeric = false }: { value: string; numeric?: boolean }) {
   return (
     <td className={numeric ? "numeric" : undefined}>
-      {value ? value : <span className="blank">blank</span>}
+      {value ? <ClampedText>{value}</ClampedText> : <span className="blank">blank</span>}
     </td>
   );
 }

@@ -685,6 +685,41 @@ textarea:focus-visible {
   vertical-align: top;
 }
 
+/* Imported values (names, clinics, visit types) can be up to 200 characters, even one long
+   word. In a list they're capped at about 30 characters wide and two lines, ending in "…"
+   (ClampedText adds the full value as a tooltip). Ordinary words never break, so a squeezed
+   table scrolls instead. Narrower screens have narrower columns, so they allow more lines;
+   that way only the rare very long value is cut, not an ordinary two-item list. */
+.data-table {
+  --clamp-lines: 2;
+}
+
+@media (max-width: 1199px) {
+  .data-table {
+    --clamp-lines: 3;
+  }
+}
+
+@media (max-width: 640px) {
+  .data-table {
+    --clamp-lines: 4;
+  }
+}
+
+.data-table .cell-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--clamp-lines);
+  line-clamp: var(--clamp-lines);
+  /* Too narrow and an ordinary "Annual Physical, Flu Shot" needs more lines than allowed;
+     a squeezed table scrolls instead. */
+  min-width: 20ch;
+  max-width: 30ch;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
 .data-table tbody tr:last-child > td {
   border-bottom: 0;
 }
@@ -774,8 +809,8 @@ textarea:focus-visible {
     width: 100%;
   }
 
-  .data-table--stack .patient-name {
-    white-space: normal;
+  .data-table--stack .cell-text {
+    min-width: 0;
   }
 
   .data-table--stack tr.row--expanded,
@@ -789,10 +824,6 @@ textarea:focus-visible {
   color: var(--ink);
   font-size: var(--text-m);
   font-weight: var(--weight-bold);
-}
-
-.data-table .patient-name {
-  white-space: nowrap;
 }
 
 .account {

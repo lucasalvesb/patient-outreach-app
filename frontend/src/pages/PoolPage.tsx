@@ -3,6 +3,7 @@ import { useState } from "react";
 import type { ApiError } from "../api/client";
 import { api } from "../api/endpoints";
 import type { PoolPatient } from "../api/types";
+import { ClampedText } from "../components/ClampedText";
 import { EmptyState } from "../components/EmptyState";
 import { Pagination } from "../components/Pagination";
 import { useNotify } from "../components/Toasts";
@@ -101,19 +102,23 @@ export function PoolPage() {
                   return (
                     <tr key={patient.id}>
                       <td>
-                        <span className="patient-name">{patient.name}</span>
-                        <span className="account">{patient.account_number}</span>
+                        <ClampedText className="patient-name">{patient.name}</ClampedText>
+                        <ClampedText className="account">{patient.account_number}</ClampedText>
                       </td>
                       <td className="numeric" data-label="DOB">
                         {formatDate(patient.dob)}
                       </td>
                       <td data-label="Due for">
-                        {patient.visit_types.join(", ")}
-                        {patient.open_record_count > patient.visit_types.length && (
-                          <span className="muted"> ({patient.open_record_count} records)</span>
-                        )}
+                        <ClampedText>
+                          {patient.visit_types.join(", ")}
+                          {patient.open_record_count > patient.visit_types.length && (
+                            <span className="muted"> ({patient.open_record_count} records)</span>
+                          )}
+                        </ClampedText>
                       </td>
-                      <td data-label="Clinic">{patient.clinics.join(", ")}</td>
+                      <td data-label="Clinic">
+                        <ClampedText>{patient.clinics.join(", ")}</ClampedText>
+                      </td>
                       <td className="numeric" data-label="Oldest last visit">
                         {formatDate(patient.oldest_last_visit)}
                         <span className="overdue">{timeSince(patient.oldest_last_visit)}</span>

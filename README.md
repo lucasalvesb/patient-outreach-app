@@ -122,7 +122,7 @@ cd backend && pytest
 # ...or with nothing but Docker:
 docker compose run --rm backend pytest
 
-# Frontend: 37 tests, plus a type check
+# Frontend: 39 tests, plus a type check
 cd frontend && npm test && npm run typecheck
 ```
 
@@ -157,6 +157,7 @@ What they cover:
   - Routing and auth redirects.
   - A claim conflict in the pool.
   - Release in My work.
+  - Long table values: a tooltip with the full text only when the value is cut short.
 
 ## How it works
 
@@ -325,6 +326,12 @@ Where the brief left something open, this is the call I made.
   exactly instead, set `--on-brand` to `#FFFFFF`.
 - **Red and amber are the only colors not from their site.** It has no error or warning states,
   and rejected rows and unanswered calls need them.
+- **Long values.** Names, clinics and visit types can be up to 200 characters. In the list
+  tables a value takes at most two lines on a desktop (three on tablets, four on phones, where
+  columns are narrower), then ends in "…"; hovering shows the full value. Only values that are
+  actually cut get the tooltip. The Details panel on All patients and My work always show
+  everything, wrapped. A table that runs out of room scrolls sideways in its own box rather
+  than squeezing words apart.
 
 ### Security and operations
 

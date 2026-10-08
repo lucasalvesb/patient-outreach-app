@@ -3,6 +3,7 @@ import { useId, useRef, useState, type ChangeEvent, type DragEvent } from "react
 import type { ApiError } from "../api/client";
 import { api } from "../api/endpoints";
 import type { ImportBatch, ImportBatchDetail } from "../api/types";
+import { ClampedText } from "../components/ClampedText";
 import { ImportPreview } from "../components/ImportPreview";
 import { useNotify } from "../components/Toasts";
 import { formatDateTime } from "../lib/dates";
@@ -252,12 +253,12 @@ function ImportHistory({
                   {/* The open file is shown as text, not a link, since clicking it would do nothing. */}
                   {item.id === currentId ? (
                     <span className="import-history__current">
-                      {item.filename}
+                      <ClampedText>{item.filename}</ClampedText>
                       <span className="badge badge--current">Viewing</span>
                     </span>
                   ) : (
                     <button type="button" className="link-button" onClick={() => onOpen(item.id)}>
-                      {item.filename}
+                      <ClampedText>{item.filename}</ClampedText>
                     </button>
                   )}
                 </td>
@@ -273,7 +274,9 @@ function ImportHistory({
                 <td className="numeric">{item.summary.duplicate}</td>
                 <td className="numeric">{item.summary.error}</td>
                 <td>
-                  {formatDateTime(item.created_at)}, {item.uploaded_by.display_name}
+                  <ClampedText>
+                    {formatDateTime(item.created_at)}, {item.uploaded_by.display_name}
+                  </ClampedText>
                 </td>
               </tr>
             ))}
