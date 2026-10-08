@@ -2,8 +2,9 @@ import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
 
 /**
  * A value in a list table, cut to two lines with "…" when it's very long. Only a value that
- * is actually cut gets a tooltip with the full text, so ordinary values stay plain text.
- * Screen readers always get the full text, since it stays in the page.
+ * is actually cut gets a tooltip with the full text, and a dotted underline that hints at it,
+ * so ordinary values stay plain text. Screen readers always get the full text, since it stays
+ * in the page.
  */
 export function ClampedText({ children, className }: { children: ReactNode; className?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -25,8 +26,9 @@ export function ClampedText({ children, className }: { children: ReactNode; clas
     return () => observer.disconnect();
   }, [children]);
 
+  const classes = ["cell-text", fullText && "cell-text--cut", className].filter(Boolean).join(" ");
   return (
-    <span ref={ref} className={className ? `cell-text ${className}` : "cell-text"} title={fullText}>
+    <span ref={ref} className={classes} title={fullText}>
       {children}
     </span>
   );

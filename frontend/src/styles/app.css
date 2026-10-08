@@ -720,6 +720,20 @@ textarea:focus-visible {
   white-space: normal;
 }
 
+/* A cut value gets a dotted underline, the browser convention for "hover for the full text"
+   (as on abbreviations), and a help cursor on hover. Values that fit look unchanged. */
+.data-table .cell-text--cut {
+  cursor: help;
+  text-decoration: underline dotted var(--sh-slate);
+  text-underline-offset: 3px;
+}
+
+/* A file name is a link already: keep its own underline and pointer. */
+.link-button .cell-text--cut {
+  cursor: inherit;
+  text-decoration: none;
+}
+
 .data-table tbody tr:last-child > td {
   border-bottom: 0;
 }

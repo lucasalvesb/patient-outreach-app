@@ -334,8 +334,8 @@ Where the brief left something open, this is the call I made.
   and rejected rows and unanswered calls need them.
 - **Long values.** Names, clinics and visit types can be up to 200 characters. In the list
   tables a value takes at most two lines on a desktop (three on tablets, four on phones, where
-  columns are narrower), then ends in "…"; hovering shows the full value. Only values that are
-  actually cut get the tooltip. The Details panel on All patients and My work always show
+  columns are narrower), then ends in "…". A cut value has a dotted underline, the usual
+  "hover for more" cue, and hovering shows the full value. Values that fit look unchanged. The Details panel on All patients and My work always show
   everything, wrapped. A table that runs out of room scrolls sideways in its own box rather
   than squeezing words apart.
 
