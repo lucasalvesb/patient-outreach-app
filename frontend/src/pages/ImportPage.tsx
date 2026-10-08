@@ -249,9 +249,17 @@ function ImportHistory({
             {batches.map((item) => (
               <tr key={item.id} aria-current={item.id === currentId ? "true" : undefined}>
                 <td>
-                  <button type="button" className="link-button" onClick={() => onOpen(item.id)}>
-                    {item.filename}
-                  </button>
+                  {/* The open file is shown as text, not a link, since clicking it would do nothing. */}
+                  {item.id === currentId ? (
+                    <span className="import-history__current">
+                      {item.filename}
+                      <span className="badge badge--current">Viewing</span>
+                    </span>
+                  ) : (
+                    <button type="button" className="link-button" onClick={() => onOpen(item.id)}>
+                      {item.filename}
+                    </button>
+                  )}
                 </td>
                 <td>
                   {item.status === "committed" ? (
