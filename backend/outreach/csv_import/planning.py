@@ -55,6 +55,7 @@ class PlannedRow:
     values: dict  # What to show for the row: cleaned values, or the raw ones for errors.
     messages: tuple[str, ...]
     clean: CleanRow | None = None
+    saves_phone: bool = False  # Changes the phone of a patient already in the database.
 
     def as_dict(self):
         return {
@@ -113,18 +114,28 @@ def plan_import(rows, existing):
             )
         # A valid row's phone becomes the patient's, even on a duplicate row: that is how a
         # file with a Phone column adds numbers to patients imported without one.
-        if clean.phone:
+        saves_phone = False
+        if clean.phone and clean.phone != phones.get(clean.account_number, ""):
             saved = phones.get(clean.account_number)
-            if saved and saved != clean.phone:
+            if saved:
                 messages += (f"Replaces the phone number {saved}.",)
+            elif clean.account_number in existing.patients:
+                messages += ("Adds the phone number; none was saved.",)
+            saves_phone = clean.account_number in existing.patients
             phones[clean.account_number] = clean.phone
-        planned.append(PlannedRow(row.row_number, outcome, _display_values(clean), messages, clean))
+        planned.append(PlannedRow(row.row_number, outcome, _display_values(clean), messages, clean, saves_phone))
     return planned
 
 
 def summarize(planned):
+    """Rows per outcome, plus `phones`: patients already saved whose phone number changes."""
     counts = Counter(row.outcome for row in planned)
-    return {"total": len(planned), **{outcome.value: counts[outcome] for outcome in Outcome}}
+    phones = {row.clean.account_number for row in planned if row.saves_phone}
+    return {
+        "total": len(planned),
+        **{outcome.value: counts[outcome] for outcome in Outcome},
+        "phones": len(phones),
+    }
 
 
 def _name_key(name):

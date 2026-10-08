@@ -1446,6 +1446,12 @@ details.record__history[open] summary {
   font-variant-numeric: tabular-nums;
 }
 
+/* Phone numbers aren't rows, so they aren't in the bar: a ring instead of a dot. */
+.legend-item--phones::before {
+  border: 2px solid var(--brand);
+  background: transparent;
+}
+
 .segmented {
   display: inline-flex;
   flex-wrap: wrap;

@@ -57,6 +57,12 @@ export function ImportPreview({ batch }: { batch: ImportBatchDetail }) {
             <strong>{summary[outcome]}</strong> {describe(outcome, summary[outcome], committed)}
           </li>
         ))}
+        {(summary.phones ?? 0) > 0 && (
+          <li className="legend-item legend-item--phones">
+            <strong>{summary.phones}</strong>{" "}
+            {summary.phones === 1 ? "phone number" : "phone numbers"} {committed ? "saved" : "will be saved"}
+          </li>
+        )}
       </ul>
 
       <div className="segmented" role="radiogroup" aria-label="Show rows">

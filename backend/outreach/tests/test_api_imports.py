@@ -24,7 +24,7 @@ def test_upload_returns_a_preview_and_imports_nothing(admin_client):
     body = response.json()
     assert body["status"] == "previewed"
     assert body["filename"] == "due.csv"
-    assert body["summary"] == {"total": 5, "create": 2, "duplicate": 1, "error": 2}
+    assert body["summary"] == {"total": 5, "create": 2, "duplicate": 1, "error": 2, "phones": 0}
     assert [(row["row_number"], row["outcome"], row["messages"]) for row in body["rows"]] == [
         (2, "create", []),
         (3, "duplicate", ["Duplicate of row 2 in this file."]),
@@ -70,7 +70,7 @@ def test_committing_imports_the_rows_into_the_pool(admin_client, agent_client):
 
     assert response.status_code == 200
     assert response.json()["status"] == "committed"
-    assert response.json()["summary"] == {"total": 5, "create": 2, "duplicate": 1, "error": 2}
+    assert response.json()["summary"] == {"total": 5, "create": 2, "duplicate": 1, "error": 2, "phones": 0}
     pool = agent_client.get("/api/pool/").json()
     assert [(p["account_number"], p["open_record_count"]) for p in pool["results"]] == [("AB1001", 2)]
 

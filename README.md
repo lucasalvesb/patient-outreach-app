@@ -126,12 +126,12 @@ there with `python manage.py createsuperuser`.
 ## Tests
 
 ```bash
-# Backend: 166 tests, against the real Postgres (needs the db container running)
+# Backend: 167 tests, against the real Postgres (needs the db container running)
 cd backend && pytest
 # ...or with nothing but Docker:
 docker compose run --rm backend pytest
 
-# Frontend: 43 tests, plus a type check
+# Frontend: 46 tests, plus a type check
 cd frontend && npm test && npm run typecheck
 ```
 
@@ -275,8 +275,9 @@ Where the brief left something open, this is the call I made.
   see it in **My work** as a link that dials it, and admins in **All patients** details; the
   pool doesn't show it before a patient is claimed. A valid row's number replaces the
   patient's saved one, even on a duplicate row, so re-importing a list with phones fills them
-  in; the preview says when a different saved number will be replaced. A blank phone changes
-  nothing.
+  in. The preview says on each row whether it adds a number or replaces a different saved one,
+  and counts the phone numbers it will save; a file whose only change is phone numbers can
+  still be imported (**Save 15 phone numbers**). A blank phone changes nothing.
 - **Encoding and size.** Files can be UTF-8 (with or without a BOM) or Windows-1252, which is
   what Excel often writes. The limits are 5 MB and 10,000 rows. A file with binary data in it
   (a NUL byte, as in a UTF-16 export or a renamed spreadsheet) is rejected with a message,

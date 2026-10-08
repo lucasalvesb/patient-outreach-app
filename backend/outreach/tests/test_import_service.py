@@ -21,7 +21,7 @@ def test_preview_stores_the_plan_without_importing_anything(admin_user):
 
     assert batch.status == ImportStatus.PREVIEWED
     assert batch.uploaded_by == admin_user
-    assert batch.summary == {"total": 5, "create": 2, "duplicate": 1, "error": 2}
+    assert batch.summary == {"total": 5, "create": 2, "duplicate": 1, "error": 2, "phones": 0}
     assert [row["outcome"] for row in batch.rows] == ["create", "duplicate", "error", "error", "create"]
     assert Patient.objects.count() == 0
     assert OutreachRecord.objects.count() == 0
@@ -52,7 +52,7 @@ def test_importing_the_same_file_again_creates_nothing(admin_user):
 
     second = commit_import(preview(admin_user).pk)
 
-    assert second.summary == {"total": 5, "create": 0, "duplicate": 3, "error": 2}
+    assert second.summary == {"total": 5, "create": 0, "duplicate": 3, "error": 2, "phones": 0}
     assert OutreachRecord.objects.count() == 2
 
 
@@ -63,7 +63,7 @@ def test_commit_revalidates_against_records_added_after_the_preview(admin_user):
     commit_import(batch.pk)
 
     batch.refresh_from_db()
-    assert batch.summary == {"total": 5, "create": 1, "duplicate": 2, "error": 2}
+    assert batch.summary == {"total": 5, "create": 1, "duplicate": 2, "error": 2, "phones": 0}
     assert OutreachRecord.objects.count() == 2
 
 
@@ -103,7 +103,7 @@ def test_a_duplicate_row_adds_a_phone_to_a_patient_imported_without_one(admin_us
 
     batch = commit_import(preview(admin_user, PHONE_CSV).pk)
 
-    assert batch.summary["duplicate"] == 1
+    assert batch.summary == {"total": 1, "create": 0, "duplicate": 1, "error": 0, "phones": 1}
     assert Patient.objects.get().phone == "555-0101"
 
 

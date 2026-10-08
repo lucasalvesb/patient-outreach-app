@@ -70,6 +70,14 @@ describe("ImportPreview", () => {
     expect(fileRow(2)).not.toHaveAccessibleDescription();
   });
 
+  it("counts the phone numbers it will save for patients already in the system", () => {
+    render(<ImportPreview batch={{ ...batch, summary: { ...batch.summary, phones: 3 } }} />);
+
+    expect(screen.getByRole("list", { name: "What this file will do" })).toHaveTextContent(
+      "3 phone numbers will be saved",
+    );
+  });
+
   it("shows a row's phone number with the patient's name", () => {
     const withPhone = { ...row(2, "create"), values: { ...row(2, "create").values, phone: "555-0101" } };
 

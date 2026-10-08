@@ -97,7 +97,9 @@ export type ImportRow = {
   messages: string[];
 };
 
-export type ImportSummary = Record<ImportOutcome, number> & { total: number };
+// `phones`: patients already in the system whose phone number the file changes (missing on
+// imports made before phone numbers existed).
+export type ImportSummary = Record<ImportOutcome, number> & { total: number; phones?: number };
 
 export type ImportBatch = {
   id: number;

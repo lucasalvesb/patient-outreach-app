@@ -27,7 +27,7 @@ def test_sample_file_plan():
         (6, Outcome.CREATE),
     ]
     assert planned[1].messages == ("Duplicate of row 2 in this file.",)
-    assert summarize(planned) == {"total": 5, "create": 2, "duplicate": 1, "error": 2}
+    assert summarize(planned) == {"total": 5, "create": 2, "duplicate": 1, "error": 2, "phones": 0}
 
 
 def test_row_matching_an_existing_record_is_a_duplicate():
@@ -180,7 +180,7 @@ def test_a_different_phone_for_an_existing_patient_says_it_replaces_the_saved_on
         phones={"AB1001": "555-0100"},
     )
 
-    created, duplicate = plan(
+    created, duplicate = planned = plan(
         phone_csv(
             "AB1001,Jane Testperson,1980-02-14,Maple Clinic,Flu Shot,2024-10-01,555-0101",
             "AB1001,Jane Testperson,1980-02-14,Maple Clinic,Annual Physical,2024-09-10,555-0102",
@@ -193,9 +193,34 @@ def test_a_different_phone_for_an_existing_patient_says_it_replaces_the_saved_on
         "A record for this patient, visit type and last visit already exists.",
         "Replaces the phone number 555-0101.",
     )
+    assert summarize(planned)["phones"] == 1  # One patient, however many rows change it.
 
 
-def test_the_same_phone_a_blank_phone_or_a_first_phone_says_nothing():
+def test_a_phone_for_a_saved_patient_without_one_says_it_adds_it():
+    existing = ExistingData(
+        patients={"AB1001": JANE},
+        record_keys={("AB1001", "annual physical", date(2024, 9, 10))},
+    )
+
+    planned = plan(
+        phone_csv(
+            "AB1001,Jane Testperson,1980-02-14,Maple Clinic,Annual Physical,2024-09-10,555-0101",
+            "AB1001,Jane Testperson,1980-02-14,Maple Clinic,Flu Shot,2024-10-01,555-0101",
+        ),
+        existing,
+    )
+
+    assert [row.messages for row in planned] == [
+        (
+            "A record for this patient, visit type and last visit already exists.",
+            "Adds the phone number; none was saved.",
+        ),
+        (),
+    ]
+    assert summarize(planned) == {"total": 2, "create": 1, "duplicate": 1, "error": 0, "phones": 1}
+
+
+def test_the_same_phone_a_blank_phone_or_a_new_patients_phone_says_nothing():
     existing = ExistingData(patients={"AB1001": JANE}, phones={"AB1001": "555-0100"})
 
     planned = plan(
@@ -208,3 +233,4 @@ def test_the_same_phone_a_blank_phone_or_a_first_phone_says_nothing():
     )
 
     assert [row.messages for row in planned] == [(), (), ()]
+    assert summarize(planned)["phones"] == 0

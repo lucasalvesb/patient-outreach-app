@@ -2,14 +2,29 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useId, useRef, useState, type ChangeEvent, type DragEvent } from "react";
 import type { ApiError } from "../api/client";
 import { api } from "../api/endpoints";
-import type { ImportBatch, ImportBatchDetail } from "../api/types";
+import type { ImportBatch, ImportBatchDetail, ImportSummary } from "../api/types";
 import { ClampedText } from "../components/ClampedText";
 import { ImportPreview } from "../components/ImportPreview";
 import { useNotify } from "../components/Toasts";
 import { formatDateTime } from "../lib/dates";
+import { phoneNumbers } from "../lib/phone";
 
 function records(count: number) {
   return count === 1 ? "1 record" : `${count} records`;
+}
+
+// What committing the file does: new records, and phone numbers for patients already saved
+// (a file can be all duplicates and still bring numbers for them).
+function commitLabel({ create, phones = 0 }: ImportSummary) {
+  if (create > 0) return `Import ${records(create)}`;
+  if (phones > 0) return `Save ${phoneNumbers(phones)}`;
+  return "Nothing to import";
+}
+
+function importedMessage({ create, phones = 0 }: ImportSummary, filename: string) {
+  if (create > 0 && phones > 0) return `Imported ${records(create)} and saved ${phoneNumbers(phones)} from ${filename}.`;
+  if (phones > 0) return `Saved ${phoneNumbers(phones)} from ${filename}.`;
+  return `Imported ${records(create)} from ${filename}.`;
 }
 
 export function ImportPage() {
@@ -49,7 +64,7 @@ export function ImportPage() {
           ? `The data changed since the preview, so ${records(result.summary.create)} were created instead of ${preview.summary.create}.`
           : null,
       );
-      notify(`Imported ${records(result.summary.create)} from ${result.filename}.`);
+      notify(importedMessage(result.summary, result.filename));
       for (const key of ["imports", "pool", "admin-patients", "filter-options"]) {
         void queryClient.invalidateQueries({ queryKey: [key] });
       }
@@ -71,6 +86,8 @@ export function ImportPage() {
   });
 
   const current = batchId !== null ? batch.data : undefined;
+  const phonesToSave = current?.summary.phones ?? 0;
+  const nothingToImport = current !== undefined && current.summary.create === 0 && phonesToSave === 0;
 
   return (
     <>
@@ -109,14 +126,10 @@ export function ImportPage() {
                   <button
                     type="button"
                     className="button button--primary"
-                    disabled={current.summary.create === 0 || commit.isPending || discard.isPending}
+                    disabled={nothingToImport || commit.isPending || discard.isPending}
                     onClick={() => commit.mutate(current)}
                   >
-                    {commit.isPending
-                      ? "Importing…"
-                      : current.summary.create === 0
-                        ? "Nothing to import"
-                        : `Import ${records(current.summary.create)}`}
+                    {commit.isPending ? "Importing…" : commitLabel(current.summary)}
                   </button>
                 </>
               ) : (
@@ -128,7 +141,12 @@ export function ImportPage() {
           </header>
           {changedNote && <p className="notice">{changedNote}</p>}
           {current.status === "previewed" && current.summary.create === 0 && (
-            <p className="notice">Every row is a duplicate or was rejected, so this file has nothing to import.</p>
+            <p className="notice">
+              {phonesToSave > 0
+                ? "Every row is a duplicate or was rejected, so no records will be created. " +
+                  `Importing saves ${phoneNumbers(phonesToSave)} for patients already in the system.`
+                : "Every row is a duplicate or was rejected, so this file has nothing to import."}
+            </p>
           )}
           <ImportPreview batch={current} />
         </section>
@@ -197,8 +215,8 @@ function FilePicker({ busy, error, onFile }: { busy: boolean; error: string | nu
           Choose file
         </button>
         <p className="dropzone__format" id={`${inputId}-format`}>
-          Columns: Account No, Patient Name, DOB, Clinic, Visit Type, Last Visit. Dates as YYYY-MM-DD or
-          MM/DD/YYYY. Up to 5 MB.
+          Columns: Account No, Patient Name, DOB, Clinic, Visit Type, Last Visit, and optionally Phone. Dates as
+          YYYY-MM-DD or MM/DD/YYYY. Up to 5 MB.
         </p>
       </div>
       {error && (
