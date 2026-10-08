@@ -123,7 +123,7 @@ there with `python manage.py createsuperuser`.
 ## Tests
 
 ```bash
-# Backend: 143 tests, against the real Postgres (needs the db container running)
+# Backend: 145 tests, against the real Postgres (needs the db container running)
 cd backend && pytest
 # ...or with nothing but Docker:
 docker compose run --rm backend pytest
@@ -265,7 +265,9 @@ Where the brief left something open, this is the call I made.
   Header names are matched ignoring case and extra spaces, and any other columns are ignored.
   A missing column rejects the whole file with a message, and nothing is stored.
 - **Encoding and size.** Files can be UTF-8 (with or without a BOM) or Windows-1252, which is
-  what Excel often writes. The limits are 5 MB and 10,000 rows.
+  what Excel often writes. The limits are 5 MB and 10,000 rows. A file with binary data in it
+  (a NUL byte, as in a UTF-16 export or a renamed spreadsheet) is rejected with a message,
+  since Postgres can't store a NUL in text.
 - **Dates.** `YYYY-MM-DD` or US `MM/DD/YYYY`. Two-digit years and impossible dates are
   rejected. DOB can't be in the future or before 1900. Last Visit can't be in the future or
   before the DOB.

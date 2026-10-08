@@ -51,6 +51,12 @@ class ParsedRow:
 
 
 def decode_csv_bytes(data):
+    # A NUL byte means the file isn't plain text, and Postgres can't store one in a text field.
+    if b"\x00" in data:
+        raise CsvFileError(
+            "The file contains binary data, so it isn't a plain-text CSV. "
+            "Save it as CSV (UTF-8) and upload it again."
+        )
     for encoding in ("utf-8-sig", "cp1252"):
         try:
             return data.decode(encoding)

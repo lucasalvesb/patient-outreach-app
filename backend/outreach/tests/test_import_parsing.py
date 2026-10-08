@@ -198,3 +198,8 @@ class TestDecoding:
     def test_undecodable_files_are_rejected(self):
         with pytest.raises(CsvFileError, match="UTF-8"):
             decode_csv_bytes(b"\x81\x8d")
+
+    def test_files_with_nul_bytes_are_rejected(self):
+        # Postgres can't store a NUL in text, so it must be stopped before anything is saved.
+        with pytest.raises(CsvFileError, match="binary data"):
+            decode_csv_bytes(b"Account No,Patient Name\nAB1001,Jane\x00Testperson\n")

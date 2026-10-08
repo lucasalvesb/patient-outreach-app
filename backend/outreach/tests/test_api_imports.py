@@ -51,6 +51,18 @@ def test_unusable_file_is_rejected_with_the_reason(admin_client):
     }
 
 
+def test_file_with_binary_data_is_rejected_not_a_server_error(admin_client):
+    text = SAMPLE_CSV.replace("Jane Testperson", "Jane\x00Testperson")
+
+    response = upload(admin_client, text=text)
+
+    assert response.status_code == 400
+    assert response.json() == {
+        "detail": "The file contains binary data, so it isn't a plain-text CSV. "
+        "Save it as CSV (UTF-8) and upload it again."
+    }
+
+
 def test_committing_imports_the_rows_into_the_pool(admin_client, agent_client):
     batch_id = upload(admin_client).json()["id"]
 
