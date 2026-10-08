@@ -306,6 +306,26 @@ Where the brief left something open, this is the call I made.
 - **"Today"** for date checks uses `TIME_ZONE` (default `America/New_York`), on the assumption
   that the call center is in the US.
 
+### Look and feel
+
+- **Suffolk Health's colors, exactly.** Taken from suffolkhealth.com (theme settings and
+  computed styles, October 2026): teal `#52BDB5`, page `#F8FBFD`, white `#FFFFFF`, black
+  `#000000` headings, navy `#151D23` menu text, gray `#575757` body text, `#E2EEF2` borders,
+  `#DCF3F2` and `#EAF7FC` panels, slate `#7C929F`, and their contact form's `#686E77` field
+  border and `#555555` placeholder. They are defined once, at the top of
+  `frontend/src/styles/app.css`.
+- **Their shapes.** Pill buttons, flat cards with 20px corners, 15px tiles, 3px form fields,
+  the header shadow and the slight fade on button hover all follow their site.
+- **Fonts.** Their typeface, Gilmer, is a paid font, so the app uses Golos Text, the closest
+  open-license match: the same letter shapes, and text runs within about 1% of Gilmer's width.
+  Form fields use Open Sans, as on their contact form. Both come from npm, so no font loads from
+  a third-party server.
+- **Text on teal is navy, not white.** White on `#52BDB5` is 2.3:1, and WCAG AA asks for 4.5:1.
+  Navy on teal is 7.5:1, and every text color pair in the app passes AA. To match their site
+  exactly instead, set `--on-brand` to `#FFFFFF`.
+- **Red and amber are the only colors not from their site.** It has no error or warning states,
+  and rejected rows and unanswered calls need them.
+
 ### Security and operations
 
 - **Sessions.** Session cookie plus CSRF, which suits a same-origin single-page app with no

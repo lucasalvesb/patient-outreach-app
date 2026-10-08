@@ -1,4 +1,5 @@
-import "@fontsource-variable/atkinson-hyperlegible-next";
+import "@fontsource-variable/golos-text";
+import "@fontsource-variable/open-sans";
 import "./styles/app.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StrictMode } from "react";
