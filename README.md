@@ -57,13 +57,19 @@ To start over with an empty database: `docker compose down -v`.
 
    Click **Import 2 records**.
 
-   `sample_data/demo_patients.csv` is a bigger file with 12 patients and a mix of bad rows:
+   `sample_data/demo_patients.csv` is a bigger file with 16 patients and a mix of bad rows:
    - a duplicate
    - an impossible date
    - missing fields
    - a future visit
    - a DOB that conflicts with an earlier row
    - an unquoted comma
+   - call notes pasted into the name column (220 characters, over the 200 limit)
+
+   It also has very long values that are valid: a 67-character name, a long clinic and visit
+   type, a surname that is one 28-letter word, and a patient due for five visits at four
+   clinics. Imported after the starter file, it shows **22 will be created, 3 skipped as
+   duplicates, 7 rejected**.
 2. **Claim (agent).** In another browser or a private window, log in as `agent1`. **Pool** lists
    unassigned patients with open records, most overdue first. Claim *Jane Testperson*.
 3. **Call.** In **My work**, each open record has an outcome pad: *No Answer* and *Voicemail* keep
