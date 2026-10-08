@@ -198,7 +198,7 @@ export function AdminPatientsPage() {
                         </td>
                         <td data-label="Assigned to">
                           {patient.assigned_to ? (
-                            <ClampedText>{patient.assigned_to.display_name}</ClampedText>
+                            <ClampedText className="cell-text--short">{patient.assigned_to.display_name}</ClampedText>
                           ) : (
                             <span className="muted">{patient.open_record_count > 0 ? "In the pool" : "Nobody"}</span>
                           )}

@@ -336,8 +336,10 @@ Where the brief left something open, this is the call I made.
   tables a value takes at most two lines on a desktop (three on tablets, four on phones, where
   columns are narrower), then ends in "…". A cut value has a dotted underline, the usual
   "hover for more" cue, and hovering shows the full value. Values that fit look unchanged. The Details panel on All patients and My work always show
-  everything, wrapped. A table that runs out of room scrolls sideways in its own box rather
-  than squeezing words apart.
+  everything, wrapped. A single word too long for its column breaks rather than widening the
+  table, so All patients fits a screen 1,225px or wider with its Details buttons in view. A
+  table that runs out of room scrolls sideways in its own box rather than squeezing ordinary
+  words apart.
 
 ### Security and operations
 

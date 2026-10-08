@@ -670,7 +670,7 @@ textarea:focus-visible {
 }
 
 .data-table th {
-  padding: 12px 14px;
+  padding: 12px;
   background: var(--surface-sunk);
   border-bottom: 1px solid var(--rule);
   color: var(--ink-nav);
@@ -680,16 +680,19 @@ textarea:focus-visible {
 }
 
 .data-table td {
-  padding: 14px 14px;
+  padding: 14px 12px;
   border-bottom: 1px solid var(--rule);
   vertical-align: top;
 }
 
 /* Imported values (names, clinics, visit types) can be up to 200 characters, even one long
    word. In a list they're capped at about 30 characters wide and two lines, ending in "…"
-   (ClampedText adds the full value as a tooltip). Ordinary words never break, so a squeezed
-   table scrolls instead. Narrower screens have narrower columns, so they allow more lines;
-   that way only the rare very long value is cut, not an ordinary two-item list. */
+   (ClampedText adds the full value as a tooltip). A word too long for its column breaks
+   instead of widening the table, so the table's narrowest width doesn't depend on the data
+   and the All patients table fits the page with its Details buttons in view. Ordinary words
+   still fit within the minimum width, so a squeezed table scrolls instead. Narrower screens
+   have narrower columns, so they allow more lines; that way only the rare very long value is
+   cut, not an ordinary two-item list. */
 .data-table {
   --clamp-lines: 2;
 }
@@ -716,8 +719,19 @@ textarea:focus-visible {
   min-width: 20ch;
   max-width: 30ch;
   overflow: hidden;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
   white-space: normal;
+}
+
+/* Names are in larger type, so fewer characters already make as wide a column. */
+.data-table .patient-name {
+  min-width: 18ch;
+}
+
+/* A short value such as an agent's name needs no room for a list, only for a first and last
+   name on one line. */
+.data-table .cell-text--short {
+  min-width: 12ch;
 }
 
 /* A cut value gets a dotted underline, the browser convention for "hover for the full text"
@@ -748,7 +762,7 @@ textarea:focus-visible {
 }
 
 .data-table .detail-row > td {
-  padding: 0 14px 20px;
+  padding: 0 12px 20px;
   background: var(--surface-sunk);
 }
 
