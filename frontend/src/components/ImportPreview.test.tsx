@@ -32,7 +32,7 @@ const batch: ImportBatchDetail = {
     row(2, "create"),
     row(3, "duplicate", ["Duplicate of row 2 in this file."]),
     row(4, "error", ["DOB '1975-13-40' is not a valid date (use YYYY-MM-DD or MM/DD/YYYY)."], "AB1002"),
-    row(5, "error", ["Account No is required."], ""),
+    row(5, "error", ["Account Number is required."], ""),
     row(6, "create"),
   ],
 };
@@ -53,7 +53,7 @@ describe("ImportPreview", () => {
     const table = screen.getByRole("table");
     expect(within(table).getAllByRole("row")).toHaveLength(6); // header + 5 rows
     expect(table).toHaveTextContent("DOB '1975-13-40' is not a valid date");
-    expect(table).toHaveTextContent("Account No is required.");
+    expect(table).toHaveTextContent("Account Number is required.");
     expect(table).toHaveTextContent("Duplicate of row 2 in this file.");
   });
 

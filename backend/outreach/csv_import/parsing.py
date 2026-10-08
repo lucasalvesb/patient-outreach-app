@@ -20,6 +20,9 @@ COLUMNS = {
     "visit_type": "Visit Type",
     "last_visit": "Last Visit",
 }
+# Field key -> name used in row error messages, where "Account No" reads better spelled out.
+# Messages about the header itself keep the exact column labels above.
+FIELD_NAMES = {**COLUMNS, "account_number": "Account Number"}
 MAX_LENGTHS = {"account_number": 50, "patient_name": 200, "clinic": 200, "visit_type": 200}
 DATE_FORMATS = ("%Y-%m-%d", "%m/%d/%Y")
 EARLIEST_DOB = date(1900, 1, 1)
@@ -164,7 +167,7 @@ def _parse_row(row_number, values, column_index, header_width, today):
 
 
 def _text_field(raw, key, errors, normalize=normalize_text):
-    label = COLUMNS[key]
+    label = FIELD_NAMES[key]
     value = normalize(raw[key])
     if not value:
         errors.append(f"{label} is required.")
@@ -176,7 +179,7 @@ def _text_field(raw, key, errors, normalize=normalize_text):
 
 
 def _date_field(raw, key, errors, today, earliest=None):
-    label = COLUMNS[key]
+    label = FIELD_NAMES[key]
     value = raw[key]
     if not value:
         errors.append(f"{label} is required.")

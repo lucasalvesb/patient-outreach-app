@@ -118,7 +118,7 @@ class TestRows:
         assert [row.row_number for row in rows] == [2, 3, 4, 5, 6]
         assert [row.errors == () for row in rows] == [True, True, False, False, True]
         assert rows[2].errors == ("DOB '1975-13-40' is not a valid date (use YYYY-MM-DD or MM/DD/YYYY).",)
-        assert rows[3].errors == ("Account No is required.",)
+        assert rows[3].errors == ("Account Number is required.",)
 
     def test_raw_values_are_kept_for_display(self):
         row = parse(SAMPLE_CSV)[2]
@@ -185,7 +185,7 @@ class TestRows:
     def test_overlong_values_are_rejected(self):
         row = only_row(csv_text(f"{'A' * 51},Jane Testperson,1980-02-14,Maple Clinic,Annual Physical,2024-09-10"))
 
-        assert row.errors == ("Account No is too long (max 50 characters).",)
+        assert row.errors == ("Account Number is too long (max 50 characters).",)
 
 
 class TestDecoding:

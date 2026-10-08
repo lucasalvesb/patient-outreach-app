@@ -29,7 +29,7 @@ def test_upload_returns_a_preview_and_imports_nothing(admin_client):
         (2, "create", []),
         (3, "duplicate", ["Duplicate of row 2 in this file."]),
         (4, "error", ["DOB '1975-13-40' is not a valid date (use YYYY-MM-DD or MM/DD/YYYY)."]),
-        (5, "error", ["Account No is required."]),
+        (5, "error", ["Account Number is required."]),
         (6, "create", []),
     ]
     assert not Patient.objects.exists()
