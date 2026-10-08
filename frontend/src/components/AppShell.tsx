@@ -42,10 +42,10 @@ export function AppShell() {
           </nav>
 
           <div className="usermenu">
-            <span className="usermenu__name">
+            <span className="usermenu__name" title={user.display_name}>
               {user.display_name}
-              {user.is_admin && <span className="usermenu__role">Admin</span>}
             </span>
+            {user.is_admin && <span className="usermenu__role">Admin</span>}
             <button type="button" className="button button--quiet" onClick={() => void logout()}>
               Log out
             </button>

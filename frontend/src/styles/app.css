@@ -333,16 +333,20 @@ textarea {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
 }
 
+/* A long name gives way (with an ellipsis) instead of pushing Log out off the screen. */
 .usermenu__name {
+  overflow: hidden;
   color: var(--ink-nav);
   font-weight: var(--weight-bold);
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .usermenu__role {
-  margin-left: 8px;
+  flex: none;
   padding: 1px 10px;
   border: 1px solid var(--brand);
   border-radius: var(--radius-pill);
@@ -382,7 +386,8 @@ textarea {
   letter-spacing: 1px;
 }
 
-@media (max-width: 760px) {
+/* The admin's menu needs about 905px on one line, so below 960px the menu moves to its own row. */
+@media (max-width: 960px) {
   .topbar__inner {
     flex-wrap: wrap;
     gap: 0 12px;
@@ -410,10 +415,13 @@ textarea {
     min-height: 48px;
   }
 
-  .usermenu__name {
+  .usermenu__name,
+  .usermenu__role {
     display: none;
   }
+}
 
+@media (max-width: 760px) {
   .page {
     padding: 28px 16px 64px;
   }
