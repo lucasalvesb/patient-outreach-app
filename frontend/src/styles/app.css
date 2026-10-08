@@ -1482,11 +1482,31 @@ details.record__history[open] summary {
   outline-offset: 1px;
 }
 
-.import-table .import-row__details {
-  min-width: 240px;
+/* The row number is the row's header for screen readers; it looks like any other cell. */
+.import-table tbody th {
+  padding: 14px 12px;
+  background: transparent;
+  border-bottom: 1px solid var(--rule);
+  color: inherit;
+  font-weight: inherit;
+  vertical-align: top;
 }
 
-.import-row--error > td {
+.import-table tbody tr:last-child > th {
+  border-bottom: 0;
+}
+
+/* A row's reasons sit on the line under its values, as part of the same row. */
+.import-table .import-row--has-messages > * {
+  padding-bottom: 2px;
+  border-bottom: 0;
+}
+
+.import-table .import-row__messages > td {
+  padding-top: 0;
+}
+
+.import-table .import-row--error > * {
   background: rgb(251 231 228 / 0.35);
 }
 

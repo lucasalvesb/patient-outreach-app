@@ -91,12 +91,16 @@ export function ImportPreview({ batch }: { batch: ImportBatchDetail }) {
               <th scope="col">Clinic</th>
               <th scope="col">Visit type</th>
               <th scope="col">Last visit</th>
-              <th scope="col">Details</th>
             </tr>
           </thead>
           <tbody>
             {rows.map((row) => (
-              <ImportRowView key={row.row_number} row={row} committed={committed} />
+              <ImportRowView
+                key={row.row_number}
+                row={row}
+                committed={committed}
+                messagesId={`${id}-row-${row.row_number}-messages`}
+              />
             ))}
           </tbody>
         </table>
@@ -106,38 +110,57 @@ export function ImportPreview({ batch }: { batch: ImportBatchDetail }) {
   );
 }
 
-function ImportRowView({ row, committed }: { row: ImportRow; committed: boolean }) {
+// A row's reasons go on a line of their own under its values, using the table's full width,
+// rather than in a column that would be empty for most rows and squeeze the values.
+function ImportRowView({ row, committed, messagesId }: { row: ImportRow; committed: boolean; messagesId: string }) {
   const badge = OUTCOME_BADGE[row.outcome];
   const { values } = row;
+  const hasMessages = row.messages.length > 0;
+  const classes = `import-row import-row--${row.outcome}`;
   return (
-    <tr className={`import-row import-row--${row.outcome}`}>
-      <td className="numeric">{row.row_number}</td>
-      <td>
-        <span className={`badge outcome--${row.outcome}`}>{committed ? badge.label : badge.previewLabel}</span>
-      </td>
-      <Value value={values.account_number} />
-      <Value value={values.patient_name} />
-      <Value value={values.dob} numeric />
-      <Value value={values.clinic} />
-      <Value value={values.visit_type} />
-      <Value value={values.last_visit} numeric />
-      <td className="import-row__details">
-        {row.messages.length > 0 && (
-          <ul className="messages">
-            {row.messages.map((message) => (
-              <li key={message}>{message}</li>
-            ))}
-          </ul>
-        )}
-      </td>
-    </tr>
+    <>
+      <tr
+        className={hasMessages ? `${classes} import-row--has-messages` : classes}
+        aria-describedby={hasMessages ? messagesId : undefined}
+      >
+        <th scope="row" className="numeric">
+          {row.row_number}
+        </th>
+        <td>
+          <span className={`badge outcome--${row.outcome}`}>{committed ? badge.label : badge.previewLabel}</span>
+        </td>
+        <Value value={values.account_number} short />
+        <Value value={values.patient_name} />
+        <Value value={values.dob} short />
+        <Value value={values.clinic} />
+        <Value value={values.visit_type} />
+        <Value value={values.last_visit} short />
+      </tr>
+      {hasMessages && (
+        <tr className={`${classes} import-row__messages`}>
+          <td colSpan={2} />
+          <td colSpan={6}>
+            <ul className="messages" id={messagesId}>
+              {row.messages.map((message) => (
+                <li key={message}>{message}</li>
+              ))}
+            </ul>
+          </td>
+        </tr>
+      )}
+    </>
   );
 }
 
-function Value({ value, numeric = false }: { value: string; numeric?: boolean }) {
+// Account numbers and dates are short, so they don't need the room a name or clinic does.
+function Value({ value, short = false }: { value: string; short?: boolean }) {
   return (
-    <td className={numeric ? "numeric" : undefined}>
-      {value ? <ClampedText>{value}</ClampedText> : <span className="blank">blank</span>}
+    <td className={short ? "numeric" : undefined}>
+      {value ? (
+        <ClampedText className={short ? "cell-text--short" : undefined}>{value}</ClampedText>
+      ) : (
+        <span className="blank">blank</span>
+      )}
     </td>
   );
 }

@@ -20,6 +20,17 @@ function row(row_number: number, outcome: ImportRow["outcome"], messages: string
   };
 }
 
+// Each file row is headed by its spreadsheet row number; its reasons, if any, describe it.
+function rowNumbers() {
+  return within(screen.getByRole("table"))
+    .getAllByRole("rowheader")
+    .map((cell) => cell.textContent);
+}
+
+function fileRow(rowNumber: number) {
+  return screen.getByRole("rowheader", { name: String(rowNumber) }).closest("tr") as HTMLElement;
+}
+
 const batch: ImportBatchDetail = {
   id: 1,
   filename: "due.csv",
@@ -50,11 +61,13 @@ describe("ImportPreview", () => {
   it("lists every row with its reason", () => {
     render(<ImportPreview batch={batch} />);
 
-    const table = screen.getByRole("table");
-    expect(within(table).getAllByRole("row")).toHaveLength(6); // header + 5 rows
-    expect(table).toHaveTextContent("DOB '1975-13-40' is not a valid date");
-    expect(table).toHaveTextContent("Account Number is required.");
-    expect(table).toHaveTextContent("Duplicate of row 2 in this file.");
+    expect(rowNumbers()).toEqual(["2", "3", "4", "5", "6"]);
+    expect(fileRow(3)).toHaveAccessibleDescription("Duplicate of row 2 in this file.");
+    expect(fileRow(4)).toHaveAccessibleDescription(
+      "DOB '1975-13-40' is not a valid date (use YYYY-MM-DD or MM/DD/YYYY).",
+    );
+    expect(fileRow(5)).toHaveAccessibleDescription("Account Number is required.");
+    expect(fileRow(2)).not.toHaveAccessibleDescription();
   });
 
   it("filters the rows by outcome", async () => {
@@ -63,8 +76,7 @@ describe("ImportPreview", () => {
 
     await user.click(screen.getByRole("radio", { name: "Rejected (2)" }));
 
-    const rows = within(screen.getByRole("table")).getAllByRole("row").slice(1);
-    expect(rows.map((r) => within(r).getAllByRole("cell")[0].textContent)).toEqual(["4", "5"]);
+    expect(rowNumbers()).toEqual(["4", "5"]);
   });
 
   it("talks about the past once the file is imported", () => {
