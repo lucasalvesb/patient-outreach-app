@@ -176,6 +176,7 @@ export function AdminPatientsPage() {
                   <th scope="col" className="numeric">
                     Closed
                   </th>
+                  <th scope="col">Clinics</th>
                   <th scope="col">Visit types</th>
                   <th scope="col">Last call</th>
                   <th scope="col">
@@ -207,8 +208,9 @@ export function AdminPatientsPage() {
                         <td className="numeric" data-label="Closed">
                           {patient.closed_record_count}
                         </td>
+                        <td data-label="Clinics">{patient.clinics.join(", ")}</td>
                         <td data-label="Visit types">{patient.visit_types.join(", ")}</td>
-                        <td data-label="Last call">
+                        <td className="numeric" data-label="Last call">
                           {patient.last_action_at ? (
                             formatDateTime(patient.last_action_at)
                           ) : (
@@ -230,7 +232,7 @@ export function AdminPatientsPage() {
                       </tr>
                       {isOpen && (
                         <tr className="detail-row" id={detailId}>
-                          <td colSpan={7}>
+                          <td colSpan={8}>
                             <PatientAdminDetail patient={patient} agents={agents} />
                           </td>
                         </tr>
