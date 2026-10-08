@@ -31,6 +31,8 @@ class Patient(models.Model):
     account_number = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=200)
     dob = models.DateField()
+    # As the latest import wrote it; blank when no file has given one.
+    phone = models.CharField(max_length=30, blank=True, default="")
     # The agent currently working this patient; null means the patient is in the pool
     # (if they have open records) or simply has nothing left to work.
     assigned_to = models.ForeignKey(

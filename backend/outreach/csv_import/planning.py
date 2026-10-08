@@ -42,6 +42,7 @@ class ExistingData:
     """What the database already holds that matters for planning an import."""
 
     patients: dict = field(default_factory=dict)  # account number -> PatientIdentity
+    phones: dict = field(default_factory=dict)  # account number -> saved phone, when there is one
     record_keys: set = field(default_factory=set)  # see record_key()
     clinics: set = field(default_factory=set)  # spellings already in use
     visit_types: set = field(default_factory=set)
@@ -74,6 +75,7 @@ def plan_import(rows, existing):
     visit_types = _SpellingBook(existing.visit_types)
     # account number -> (identity, row number that introduced it, or None if from the database)
     identities = {account: (identity, None) for account, identity in existing.patients.items()}
+    phones = dict(existing.phones)  # account number -> the phone the patient will have so far
     rows_creating = {}  # record key -> row number that will create it
 
     planned = []
@@ -109,6 +111,13 @@ def plan_import(rows, existing):
             identities.setdefault(
                 clean.account_number, (PatientIdentity(clean.patient_name, clean.dob), row.row_number)
             )
+        # A valid row's phone becomes the patient's, even on a duplicate row: that is how a
+        # file with a Phone column adds numbers to patients imported without one.
+        if clean.phone:
+            saved = phones.get(clean.account_number)
+            if saved and saved != clean.phone:
+                messages += (f"Replaces the phone number {saved}.",)
+            phones[clean.account_number] = clean.phone
         planned.append(PlannedRow(row.row_number, outcome, _display_values(clean), messages, clean))
     return planned
 
@@ -140,6 +149,7 @@ def _display_values(clean):
         "clinic": clean.clinic,
         "visit_type": clean.visit_type,
         "last_visit": clean.last_visit.isoformat(),
+        "phone": clean.phone,
     }
 
 

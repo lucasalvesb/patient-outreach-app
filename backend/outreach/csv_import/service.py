@@ -44,6 +44,7 @@ def commit_import(batch_id):
 
         planned = _plan(batch.content)
         _create_records(batch, [row.clean for row in planned if row.outcome == Outcome.CREATE])
+        _save_phones(planned)
 
         batch.status = ImportStatus.COMMITTED
         batch.committed_at = timezone.now()
@@ -68,14 +69,14 @@ def _plan(text):
 
 def _existing_data_for(rows):
     accounts = {row.clean.account_number for row in rows if row.clean}
-    patients = Patient.objects.filter(account_number__in=accounts)
+    patients = list(
+        Patient.objects.filter(account_number__in=accounts).values_list("account_number", "name", "dob", "phone")
+    )
     records = OutreachRecord.objects.filter(patient__account_number__in=accounts)
     all_records = OutreachRecord.objects.order_by()  # No ordering, so DISTINCT works as expected.
     return ExistingData(
-        patients={
-            account: PatientIdentity(name, dob)
-            for account, name, dob in patients.values_list("account_number", "name", "dob")
-        },
+        patients={account: PatientIdentity(name, dob) for account, name, dob, _ in patients},
+        phones={account: phone for account, _, _, phone in patients if phone},
         record_keys={
             record_key(*values)
             for values in records.values_list("patient__account_number", "visit_type", "last_visit")
@@ -105,6 +106,20 @@ def _create_records(batch, rows_to_create):
         )
         for row in rows_to_create
     )
+
+
+def _save_phones(planned):
+    """Give each patient the last phone the file has for them, from created or duplicate rows.
+
+    A blank phone leaves the saved one alone, as the plan's messages describe.
+    """
+    phones = {row.clean.account_number: row.clean.phone for row in planned if row.clean and row.clean.phone}
+    changed = []
+    for patient in Patient.objects.filter(account_number__in=phones):
+        if patient.phone != phones[patient.account_number]:
+            patient.phone = phones[patient.account_number]
+            changed.append(patient)
+    Patient.objects.bulk_update(changed, ["phone"])
 
 
 def _lock_imports():

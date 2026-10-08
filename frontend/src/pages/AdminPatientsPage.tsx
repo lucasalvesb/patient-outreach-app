@@ -7,6 +7,7 @@ import type { AdminPatient, User } from "../api/types";
 import { ClampedText } from "../components/ClampedText";
 import { EmptyState } from "../components/EmptyState";
 import { Pagination } from "../components/Pagination";
+import { PhoneNumber } from "../components/PhoneNumber";
 import { RecordPanel } from "../components/RecordPanel";
 import { useNotify } from "../components/Toasts";
 import { formatDate, formatDateTime } from "../lib/dates";
@@ -265,6 +266,12 @@ function PatientAdminDetail({ patient, agents }: { patient: AdminPatient; agents
           <div>
             <dt>Name</dt>
             <dd>{patient.name}</dd>
+          </div>
+          <div>
+            <dt>Phone</dt>
+            <dd>
+              <PhoneNumber phone={patient.phone} />
+            </dd>
           </div>
           <div>
             <dt>DOB</dt>

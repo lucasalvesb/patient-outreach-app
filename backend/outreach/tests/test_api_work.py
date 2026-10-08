@@ -103,6 +103,13 @@ class TestMyWork:
             ("no_answer", "No Answer", "", "agent1"),
         ]
 
+    def test_includes_the_phone_number_to_call(self, agent_client, agent):
+        make_record(make_patient("AB1001", assigned_to=agent, phone="555-0101"))
+
+        [patient] = agent_client.get("/api/my-work/").json()
+
+        assert patient["phone"] == "555-0101"
+
 
 class TestLogAction:
     @pytest.fixture

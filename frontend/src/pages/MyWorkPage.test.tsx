@@ -24,15 +24,17 @@ function record(id: number, visit_type: string, overrides: Partial<OutreachRecor
   };
 }
 
-function patient(records: OutreachRecord[]): PatientWork {
+function patient(records: OutreachRecord[], overrides: Partial<PatientWork> = {}): PatientWork {
   return {
     id: 7,
     account_number: "AB1001",
     name: "Jane Testperson",
     dob: "1980-02-14",
+    phone: "(555) 010-0101",
     assigned_to: agent,
     claimed_at: "2026-10-07T13:00:00Z",
     records,
+    ...overrides,
   };
 }
 
@@ -55,6 +57,22 @@ describe("MyWorkPage", () => {
     expect(await screen.findByRole("heading", { name: "Jane Testperson", level: 2 })).toBeVisible();
     expect(screen.getByRole("article", { name: "Annual Physical" })).toHaveTextContent("Maple Clinic");
     expect(screen.getByText("Confirm the name and date of birth before discussing any visit.")).toBeVisible();
+  });
+
+  it("shows the phone number as a link that dials it", async () => {
+    vi.mocked(api.myWork).mockResolvedValue([patient([record(11, "Annual Physical")])]);
+
+    renderWithProviders(<MyWorkPage />, { path: "/my-work" });
+
+    expect(await screen.findByRole("link", { name: "(555) 010-0101" })).toHaveAttribute("href", "tel:5550100101");
+  });
+
+  it("says so when there is no phone number", async () => {
+    vi.mocked(api.myWork).mockResolvedValue([patient([record(11, "Annual Physical")], { phone: "" })]);
+
+    renderWithProviders(<MyWorkPage />, { path: "/my-work" });
+
+    expect(await screen.findByText("Not on file")).toBeVisible();
   });
 
   it("releases the patient once their last open record is closed", async () => {

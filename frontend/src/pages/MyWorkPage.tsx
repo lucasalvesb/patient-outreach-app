@@ -3,6 +3,7 @@ import { Link, useSearchParams } from "react-router";
 import { api } from "../api/endpoints";
 import type { LogActionPayload, LogActionResult, PatientWork } from "../api/types";
 import { EmptyState } from "../components/EmptyState";
+import { PhoneNumber } from "../components/PhoneNumber";
 import { RecordPanel } from "../components/RecordPanel";
 import { useNotify } from "../components/Toasts";
 import { ageOn, formatDate, formatDateTime } from "../lib/dates";
@@ -133,6 +134,12 @@ function PatientDetail({
       <header className="patient__header">
         <h2 id="patient-name">{patient.name}</h2>
         <dl className="identity">
+          <div>
+            <dt>Phone</dt>
+            <dd>
+              <PhoneNumber phone={patient.phone} />
+            </dd>
+          </div>
           <div>
             <dt>DOB</dt>
             <dd>

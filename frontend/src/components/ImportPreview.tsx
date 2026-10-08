@@ -130,7 +130,11 @@ function ImportRowView({ row, committed, messagesId }: { row: ImportRow; committ
           <span className={`badge outcome--${row.outcome}`}>{committed ? badge.label : badge.previewLabel}</span>
         </td>
         <Value value={values.account_number} short />
-        <Value value={values.patient_name} />
+        <td>
+          {values.patient_name ? <ClampedText>{values.patient_name}</ClampedText> : <span className="blank">blank</span>}
+          {/* Under the name rather than in a column of its own, so the table still fits the page. */}
+          {values.phone && <ClampedText className="import-row__phone">{values.phone}</ClampedText>}
+        </td>
         <Value value={values.dob} short />
         <Value value={values.clinic} />
         <Value value={values.visit_type} />

@@ -1,33 +1,34 @@
-Account No,Patient Name,DOB,Clinic,Visit Type,Last Visit
-AB1001,Jane Testperson,1980-02-14,Maple Clinic,Annual Physical,2024-09-10
-AB1001,Jane Testperson,1980-02-14,Maple Clinic,Diabetes Follow-Up,2025-03-01
-AB1003,Marcus Sample,1967-07-22,Oak Clinic,Blood Pressure Check,2025-01-18
-AB1003,Marcus Sample,1967-07-22,Oak Clinic,Annual Physical,2024-06-30
-AB1004,"Okafor, Grace",1992-11-05,Birch Family Medicine,Annual Physical,2024-11-12
-AB1005,Priya Placeholder,1958-03-29,Cedar Health Center,Mammogram Screening,2024-04-02
-AB1005,Priya Placeholder,1958-03-29,Cedar Health Center,Colonoscopy Screening,2016-05-20
-AB1012,Noor Fakename,2001-06-23,Oak Clinic,Flu Shot,2024-09-15
-ab1006 ,Tomás Example,04/17/1985,maple clinic,flu shot,2024-10-01
-AB1007,Riley Fictional,2019-08-08,Birch Family Medicine,Well-Child Visit,2025-02-14
-AB1008,Hana Demo,1949-12-01,Oak Clinic,Diabetes Follow-Up,2025-04-09
-AB1008,Hana Demo,1949-12-01,Oak Clinic,Blood Pressure Check,2025-04-09
-AB1009,Luis Mockup,1973-05-16,Cedar Health Center,Annual Physical,2023-12-19
-AB1010,Ada Notreal,1988-09-30,Maple Clinic,Annual Physical,2024-08-27
-AB1011,Wen Testcase,1963-02-11,Birch Family Medicine,Colonoscopy Screening,2015-07-07
-AB1013,Eli Sampleton,1979-10-10,Cedar Health Center,Blood Pressure Check,2025-05-02
-AB1018,Maria Fernanda Albuquerque de Souza Vasconcelos Montenegro Carvalho,1971-08-03,St. Catherine's Regional Medical Center - Family and Community Medicine,Comprehensive Diabetic Eye Exam (Dilated Retinal Screening),2024-07-15
-AB1019,Christopher Alexander Montgomery-Whitfield,1983-01-27,Maple Clinic,Annual Physical,2024-12-03
-AB1020,Lakshmi Venkatanarasimharajuvaripeta,1966-04-12,Cedar Health Center,Blood Pressure Check,2024-10-21
-AB1021,Rosa Delgado,1956-09-09,Oak Clinic,Annual Physical,2024-05-14
-AB1021,Rosa Delgado,1956-09-09,Oak Clinic,Blood Pressure Check,2024-11-02
-AB1021,Rosa Delgado,1956-09-09,Birch Family Medicine,Diabetes Follow-Up,2025-01-20
-AB1021,Rosa Delgado,1956-09-09,St. Catherine's Regional Medical Center - Family and Community Medicine,Comprehensive Diabetic Eye Exam (Dilated Retinal Screening),2024-08-30
-AB1021,Rosa Delgado,1956-09-09,Maple Clinic,Flu Shot,2024-10-05
-AB1001,Jane Testperson,02/14/1980,MAPLE CLINIC,annual physical,2024-09-10
-AB1014,Kim Draft,1990-02-30,Maple Clinic,Annual Physical,2025-01-05
-,Missing Account,1990-01-01,Oak Clinic,Flu Shot,2025-02-01
-AB1015,Future Visit,1984-04-04,Oak Clinic,Annual Physical,2030-01-01
-AB1003,Marcus Sample,1967-07-23,Oak Clinic,Flu Shot,2024-10-20
-AB1016,Lee, Pat,1975-01-05,Oak Clinic,Annual Physical,2025-01-05
-AB1017,Sky Nobody,1995-07-19,,Annual Physical,2025-03-03
-AB1022,"Robert James Thompson - asked us to call back after 5pm on weekdays, prefers his daughter Sarah on the line, hard of hearing so speak slowly, mentioned he moved recently so double-check the address on file before booking",1948-03-17,Oak Clinic,Annual Physical,2024-09-30
+Account No,Patient Name,DOB,Clinic,Visit Type,Last Visit,Phone
+AB1001,Jane Testperson,1980-02-14,Maple Clinic,Annual Physical,2024-09-10,(617) 555-0101
+AB1001,Jane Testperson,1980-02-14,Maple Clinic,Diabetes Follow-Up,2025-03-01,(617) 555-0101
+AB1003,Marcus Sample,1967-07-22,Oak Clinic,Blood Pressure Check,2025-01-18,(617) 555-0103
+AB1003,Marcus Sample,1967-07-22,Oak Clinic,Annual Physical,2024-06-30,(617) 555-0103
+AB1004,"Okafor, Grace",1992-11-05,Birch Family Medicine,Annual Physical,2024-11-12,+1 617 555 0104
+AB1005,Priya Placeholder,1958-03-29,Cedar Health Center,Mammogram Screening,2024-04-02,(617) 555-0105
+AB1005,Priya Placeholder,1958-03-29,Cedar Health Center,Colonoscopy Screening,2016-05-20,(617) 555-0105
+AB1012,Noor Fakename,2001-06-23,Oak Clinic,Flu Shot,2024-09-15,617-555-0112
+ab1006 ,Tomás Example,04/17/1985,maple clinic,flu shot,2024-10-01,(617) 555-0106
+AB1007,Riley Fictional,2019-08-08,Birch Family Medicine,Well-Child Visit,2025-02-14,
+AB1008,Hana Demo,1949-12-01,Oak Clinic,Diabetes Follow-Up,2025-04-09,(617) 555-0108
+AB1008,Hana Demo,1949-12-01,Oak Clinic,Blood Pressure Check,2025-04-09,(617) 555-0108
+AB1009,Luis Mockup,1973-05-16,Cedar Health Center,Annual Physical,2023-12-19,617.555.0109
+AB1010,Ada Notreal,1988-09-30,Maple Clinic,Annual Physical,2024-08-27,(617) 555-0110
+AB1011,Wen Testcase,1963-02-11,Birch Family Medicine,Colonoscopy Screening,2015-07-07,(617) 555-0111
+AB1013,Eli Sampleton,1979-10-10,Cedar Health Center,Blood Pressure Check,2025-05-02,(617) 555-0113
+AB1018,Maria Fernanda Albuquerque de Souza Vasconcelos Montenegro Carvalho,1971-08-03,St. Catherine's Regional Medical Center - Family and Community Medicine,Comprehensive Diabetic Eye Exam (Dilated Retinal Screening),2024-07-15,(617) 555-0118
+AB1019,Christopher Alexander Montgomery-Whitfield,1983-01-27,Maple Clinic,Annual Physical,2024-12-03,(617) 555-0119
+AB1020,Lakshmi Venkatanarasimharajuvaripeta,1966-04-12,Cedar Health Center,Blood Pressure Check,2024-10-21,(617) 555-0120
+AB1021,Rosa Delgado,1956-09-09,Oak Clinic,Annual Physical,2024-05-14,(617) 555-0121
+AB1021,Rosa Delgado,1956-09-09,Oak Clinic,Blood Pressure Check,2024-11-02,(617) 555-0121
+AB1021,Rosa Delgado,1956-09-09,Birch Family Medicine,Diabetes Follow-Up,2025-01-20,(617) 555-0121
+AB1021,Rosa Delgado,1956-09-09,St. Catherine's Regional Medical Center - Family and Community Medicine,Comprehensive Diabetic Eye Exam (Dilated Retinal Screening),2024-08-30,(617) 555-0121
+AB1021,Rosa Delgado,1956-09-09,Maple Clinic,Flu Shot,2024-10-05,(617) 555-0121
+AB1001,Jane Testperson,02/14/1980,MAPLE CLINIC,annual physical,2024-09-10,(617) 555-0101
+AB1014,Kim Draft,1990-02-30,Maple Clinic,Annual Physical,2025-01-05,(617) 555-0114
+,Missing Account,1990-01-01,Oak Clinic,Flu Shot,2025-02-01,
+AB1015,Future Visit,1984-04-04,Oak Clinic,Annual Physical,2030-01-01,(617) 555-0115
+AB1003,Marcus Sample,1967-07-23,Oak Clinic,Flu Shot,2024-10-20,(617) 555-0103
+AB1016,Lee, Pat,1975-01-05,Oak Clinic,Annual Physical,2025-01-05,(617) 555-0116
+AB1017,Sky Nobody,1995-07-19,,Annual Physical,2025-03-03,(617) 555-0117
+AB1022,"Robert James Thompson - asked us to call back after 5pm on weekdays, prefers his daughter Sarah on the line, hard of hearing so speak slowly, mentioned he moved recently so double-check the address on file before booking",1948-03-17,Oak Clinic,Annual Physical,2024-09-30,(617) 555-0122
+AB1023,Pat Quinn,1979-03-03,Maple Clinic,Flu Shot,2024-11-11,call after 5pm

@@ -69,6 +69,14 @@ def test_rows_summarize_assignment_and_records(admin_client, population):
     assert jane["last_action_at"] is not None
 
 
+def test_rows_include_the_phone_number(admin_client):
+    make_record(make_patient("AB1001", phone="555-0101"))
+
+    [patient] = admin_client.get("/api/admin/patients/").json()["results"]
+
+    assert patient["phone"] == "555-0101"
+
+
 def test_patient_detail_includes_records_and_call_history(admin_client, population):
     body = admin_client.get(f"/api/admin/patients/{population.jane.id}/").json()
 

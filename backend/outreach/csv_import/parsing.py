@@ -6,6 +6,7 @@ well-formed?". Whether a good row is a duplicate is decided in `planning`.
 
 import csv
 import io
+import re
 from dataclasses import dataclass
 from datetime import date, datetime
 
@@ -20,10 +21,14 @@ COLUMNS = {
     "visit_type": "Visit Type",
     "last_visit": "Last Visit",
 }
+# Columns a file may leave out. Field key -> accepted labels; the first is the one shown.
+# The brief's format has no phone number, so files without one still import as before.
+OPTIONAL_COLUMNS = {"phone": ("Phone", "Phone Number")}
 # Field key -> name used in row error messages, where "Account No" reads better spelled out.
 # Messages about the header itself keep the exact column labels above.
 FIELD_NAMES = {**COLUMNS, "account_number": "Account Number"}
-MAX_LENGTHS = {"account_number": 50, "patient_name": 200, "clinic": 200, "visit_type": 200}
+MAX_LENGTHS = {"account_number": 50, "patient_name": 200, "clinic": 200, "visit_type": 200, "phone": 30}
+PHONE_CHARACTERS = re.compile(r"[0-9+().\- ]+")
 DATE_FORMATS = ("%Y-%m-%d", "%m/%d/%Y")
 EARLIEST_DOB = date(1900, 1, 1)
 
@@ -40,6 +45,7 @@ class CleanRow:
     clinic: str
     visit_type: str
     last_visit: date
+    phone: str = ""  # Blank when the file has no phone for the row (or no Phone column).
 
 
 @dataclass(frozen=True)
@@ -118,14 +124,15 @@ def _header_key(label):
 
 def _map_columns(header):
     """Return field key -> column position, matching labels case-insensitively."""
-    keys_by_label = {_header_key(label): key for key, label in COLUMNS.items()}
+    labels = {key: (label,) for key, label in COLUMNS.items()} | OPTIONAL_COLUMNS
+    keys_by_label = {_header_key(label): key for key, names in labels.items() for label in names}
     column_index = {}
     for position, cell in enumerate(header):
         key = keys_by_label.get(_header_key(cell))
         if key is None:
             continue  # Unknown extra columns are ignored.
         if key in column_index:
-            raise CsvFileError(f"Duplicate column: {COLUMNS[key]}.")
+            raise CsvFileError(f"Duplicate column: {labels[key][0]}.")
         column_index[key] = position
 
     missing = [label for key, label in COLUMNS.items() if key not in column_index]
@@ -165,10 +172,11 @@ def _parse_row(row_number, values, column_index, header_width, today):
     last_visit = _date_field(raw, "last_visit", errors, today)
     if dob and last_visit and last_visit < dob:
         errors.append("Last Visit cannot be before DOB.")
+    phone = _phone_field(raw, errors)
 
     if errors:
         return ParsedRow(row_number, raw, None, tuple(errors))
-    clean = CleanRow(account_number, patient_name, dob, clinic, visit_type, last_visit)
+    clean = CleanRow(account_number, patient_name, dob, clinic, visit_type, last_visit, phone)
     return ParsedRow(row_number, raw, clean, ())
 
 
@@ -180,6 +188,21 @@ def _text_field(raw, key, errors, normalize=normalize_text):
         return None
     if len(value) > MAX_LENGTHS[key]:
         errors.append(f"{label} is too long (max {MAX_LENGTHS[key]} characters).")
+        return None
+    return value
+
+
+def _phone_field(raw, errors):
+    """Optional. Kept as the file writes it (spacing tidied), since formats vary by country."""
+    value = normalize_text(raw.get("phone", ""))
+    if not value:
+        return ""
+    digits = sum(character.isdigit() for character in value)
+    if len(value) > MAX_LENGTHS["phone"] or not PHONE_CHARACTERS.fullmatch(value) or not 7 <= digits <= 15:
+        errors.append(
+            f"Phone '{value}' is not a valid phone number "
+            "(use digits, spaces and + - ( ) . only, with 7 to 15 digits)."
+        )
         return None
     return value
 

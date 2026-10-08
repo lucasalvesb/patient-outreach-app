@@ -12,7 +12,7 @@ class OutreachRecordInline(admin.TabularInline):
 
 @admin.register(Patient)
 class PatientAdmin(admin.ModelAdmin):
-    list_display = ["account_number", "name", "dob", "assigned_to", "claimed_at"]
+    list_display = ["account_number", "name", "dob", "phone", "assigned_to", "claimed_at"]
     list_filter = ["assigned_to"]
     search_fields = ["account_number", "name"]
     inlines = [OutreachRecordInline]

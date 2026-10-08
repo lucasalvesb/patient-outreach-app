@@ -86,6 +86,43 @@ def test_new_record_for_a_claimed_patient_stays_with_that_agent(admin_user, agen
     assert patient.records.filter(status=RecordStatus.OPEN).count() == 3
 
 
+PHONE_CSV = (
+    "Account No,Patient Name,DOB,Clinic,Visit Type,Last Visit,Phone\n"
+    "AB1001,Jane Testperson,1980-02-14,Maple Clinic,Annual Physical,2024-09-10,555-0101\n"
+)
+
+
+def test_commit_saves_the_phone_of_a_new_patient(admin_user):
+    commit_import(preview(admin_user, PHONE_CSV).pk)
+
+    assert Patient.objects.get().phone == "555-0101"
+
+
+def test_a_duplicate_row_adds_a_phone_to_a_patient_imported_without_one(admin_user):
+    commit_import(preview(admin_user).pk)  # The starter file has no Phone column.
+
+    batch = commit_import(preview(admin_user, PHONE_CSV).pk)
+
+    assert batch.summary["duplicate"] == 1
+    assert Patient.objects.get().phone == "555-0101"
+
+
+def test_preview_says_when_a_phone_replaces_the_saved_one(admin_user):
+    make_patient(phone="555-0100")
+
+    batch = preview(admin_user, PHONE_CSV)
+
+    assert batch.rows[0]["messages"] == ["Replaces the phone number 555-0100."]
+
+
+def test_a_blank_phone_keeps_the_saved_one(admin_user):
+    make_patient(phone="555-0100")
+
+    commit_import(preview(admin_user, PHONE_CSV.replace(",555-0101", ",")).pk)
+
+    assert Patient.objects.get().phone == "555-0100"
+
+
 def test_a_preview_can_only_be_committed_once(admin_user):
     batch = preview(admin_user)
     commit_import(batch.pk)

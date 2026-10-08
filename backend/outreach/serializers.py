@@ -35,7 +35,7 @@ class PatientWorkSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Patient
-        fields = ["id", "account_number", "name", "dob", "assigned_to", "claimed_at", "records"]
+        fields = ["id", "account_number", "name", "dob", "phone", "assigned_to", "claimed_at", "records"]
 
 
 class PoolPatientSerializer(serializers.ModelSerializer):
@@ -83,6 +83,7 @@ class AdminPatientSerializer(serializers.ModelSerializer):
             "account_number",
             "name",
             "dob",
+            "phone",
             "assigned_to",
             "claimed_at",
             "open_record_count",

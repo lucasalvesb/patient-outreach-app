@@ -1025,6 +1025,12 @@ textarea:focus-visible {
   font-weight: var(--weight-bold);
 }
 
+/* The number an agent dials, kept on one line so it reads as one number. */
+.phone-link {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
 /* No wrapping: a wrapping column takes the width of its longest value, unwrapped. */
 .identity--stacked {
   flex-direction: column;
@@ -1504,6 +1510,11 @@ details.record__history[open] summary {
 
 .import-table .import-row__messages > td {
   padding-top: 0;
+}
+
+.import-row__phone {
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
 }
 
 .import-table .import-row--error > * {

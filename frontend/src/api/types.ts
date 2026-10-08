@@ -39,6 +39,7 @@ export type PatientWork = {
   account_number: string;
   name: string;
   dob: string;
+  phone: string; // "" when no import has given one
   assigned_to: User | null;
   claimed_at: string | null;
   records: OutreachRecord[];
@@ -60,6 +61,7 @@ export type AdminPatient = {
   account_number: string;
   name: string;
   dob: string;
+  phone: string;
   assigned_to: User | null;
   claimed_at: string | null;
   open_record_count: number;
@@ -85,6 +87,7 @@ export type ImportRowValues = {
   clinic: string;
   visit_type: string;
   last_visit: string;
+  phone?: string; // Missing for a rejected row from a file without a Phone column.
 };
 
 export type ImportRow = {

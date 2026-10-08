@@ -140,6 +140,7 @@ def test_rows_serialize_cleaned_values_or_raw_values_with_reasons():
             "clinic": "Maple Clinic",
             "visit_type": "Annual Physical",
             "last_visit": "2024-09-10",
+            "phone": "",
         },
         "messages": [],
     }
@@ -156,3 +157,54 @@ def test_rows_serialize_cleaned_values_or_raw_values_with_reasons():
         },
         "messages": ["DOB '1975-13-40' is not a valid date (use YYYY-MM-DD or MM/DD/YYYY)."],
     }
+
+
+PHONE_HEADER = "Account No,Patient Name,DOB,Clinic,Visit Type,Last Visit,Phone\n"
+
+
+def phone_csv(*rows):
+    return PHONE_HEADER + "".join(f"{row}\n" for row in rows)
+
+
+def test_phone_is_shown_with_the_row():
+    (row,) = plan(phone_csv("AB1001,Jane Testperson,1980-02-14,Maple Clinic,Annual Physical,2024-09-10,555-0101"))
+
+    assert row.values["phone"] == "555-0101"
+    assert row.messages == ()
+
+
+def test_a_different_phone_for_an_existing_patient_says_it_replaces_the_saved_one():
+    existing = ExistingData(
+        patients={"AB1001": JANE},
+        record_keys={("AB1001", "annual physical", date(2024, 9, 10))},
+        phones={"AB1001": "555-0100"},
+    )
+
+    created, duplicate = plan(
+        phone_csv(
+            "AB1001,Jane Testperson,1980-02-14,Maple Clinic,Flu Shot,2024-10-01,555-0101",
+            "AB1001,Jane Testperson,1980-02-14,Maple Clinic,Annual Physical,2024-09-10,555-0102",
+        ),
+        existing,
+    )
+
+    assert created.messages == ("Replaces the phone number 555-0100.",)
+    assert duplicate.messages == (
+        "A record for this patient, visit type and last visit already exists.",
+        "Replaces the phone number 555-0101.",
+    )
+
+
+def test_the_same_phone_a_blank_phone_or_a_first_phone_says_nothing():
+    existing = ExistingData(patients={"AB1001": JANE}, phones={"AB1001": "555-0100"})
+
+    planned = plan(
+        phone_csv(
+            "AB1001,Jane Testperson,1980-02-14,Maple Clinic,Flu Shot,2024-10-01,555-0100",
+            "AB1001,Jane Testperson,1980-02-14,Maple Clinic,Annual Physical,2024-09-10,",
+            "AB1003,Marcus Sample,1967-07-22,Oak Clinic,Flu Shot,2024-10-01,555-0103",
+        ),
+        existing,
+    )
+
+    assert [row.messages for row in planned] == [(), (), ()]

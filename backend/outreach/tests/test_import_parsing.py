@@ -188,6 +188,46 @@ class TestRows:
         assert row.errors == ("Account Number is too long (max 50 characters).",)
 
 
+class TestPhone:
+    HEADER = "Account No,Patient Name,DOB,Clinic,Visit Type,Last Visit,Phone\n"
+    ROW = "AB1001,Jane Testperson,1980-02-14,Maple Clinic,Annual Physical,2024-09-10"
+
+    def test_the_phone_column_is_optional(self):
+        row = only_row(csv_text(self.ROW))
+
+        assert row.errors == ()
+        assert row.clean.phone == ""
+
+    def test_phone_is_trimmed_and_inner_whitespace_collapsed(self):
+        row = only_row(f"{self.HEADER}{self.ROW}, (555)  010-0101 \n")
+
+        assert row.clean.phone == "(555) 010-0101"
+
+    def test_phone_number_header_is_accepted_too(self):
+        header = self.HEADER.replace("Phone", "phone number")
+
+        assert only_row(f"{header}{self.ROW},555-0101\n").clean.phone == "555-0101"
+
+    def test_blank_phone_is_allowed(self):
+        row = only_row(f"{self.HEADER}{self.ROW},\n")
+
+        assert row.errors == ()
+        assert row.clean.phone == ""
+
+    @pytest.mark.parametrize("phone", ["555-0101", "+1 (555) 010-0101", "555.010.0101", "+44 20 7946 0958"])
+    def test_common_formats_are_accepted(self, phone):
+        assert only_row(f"{self.HEADER}{self.ROW},{phone}\n").clean.phone == phone
+
+    @pytest.mark.parametrize("phone", ["call after 5", "555-01", "555-0101 ext 2", "1234567890123456"])
+    def test_invalid_phone_rejects_the_row(self, phone):
+        row = only_row(f"{self.HEADER}{self.ROW},{phone}\n")
+
+        assert row.errors == (
+            f"Phone '{phone}' is not a valid phone number "
+            "(use digits, spaces and + - ( ) . only, with 7 to 15 digits).",
+        )
+
+
 class TestDecoding:
     def test_utf8_byte_order_mark_is_removed(self):
         assert decode_csv_bytes("﻿Account No".encode("utf-8")) == "Account No"

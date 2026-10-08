@@ -65,11 +65,14 @@ To start over with an empty database: `docker compose down -v`.
    - a DOB that conflicts with an earlier row
    - an unquoted comma
    - call notes pasted into the name column (220 characters, over the 200 limit)
+   - a phone number that isn't one (`call after 5pm`)
 
    It also has very long values that are valid: a 67-character name, a long clinic and visit
    type, a surname that is one 28-letter word, and a patient due for five visits at four
-   clinics. Imported after the starter file, it shows **22 will be created, 3 skipped as
-   duplicates, 7 rejected**.
+   clinics. It has the optional Phone column too: fictional `555-01xx` numbers written in a few
+   formats, with one patient left blank. Imported after the starter file, it shows **22 will
+   be created, 3 skipped as duplicates, 8 rejected**, and Jane Testperson, imported from the
+   starter file without a phone, gets her number from the duplicate rows.
 2. **Claim (agent).** In another browser or a private window, log in as `agent1`. **Pool** lists
    unassigned patients with open records, most overdue first. Claim *Jane Testperson*.
 3. **Call.** In **My work**, each open record has an outcome pad: *No Answer* and *Voicemail* keep
@@ -123,12 +126,12 @@ there with `python manage.py createsuperuser`.
 ## Tests
 
 ```bash
-# Backend: 145 tests, against the real Postgres (needs the db container running)
+# Backend: 166 tests, against the real Postgres (needs the db container running)
 cd backend && pytest
 # ...or with nothing but Docker:
 docker compose run --rm backend pytest
 
-# Frontend: 39 tests, plus a type check
+# Frontend: 43 tests, plus a type check
 cd frontend && npm test && npm run typecheck
 ```
 
@@ -170,7 +173,8 @@ What they cover:
 ### Data model
 
 - **Patient** is identified by its normalized account number. `assigned_to` is the agent
-  working the patient; empty means unassigned.
+  working the patient; empty means unassigned. `phone` is the number to call, as the latest
+  import wrote it, or blank.
 - **OutreachRecord** is one visit a patient is due for: clinic, visit type, last visit, and a
   status of `open` or `closed`. A database constraint makes *patient + visit type
   (case-insensitive) + last visit* unique, which is the duplicate rule.
@@ -264,6 +268,15 @@ Where the brief left something open, this is the call I made.
 - **Columns.** The file needs `Account No, Patient Name, DOB, Clinic, Visit Type, Last Visit`.
   Header names are matched ignoring case and extra spaces, and any other columns are ignored.
   A missing column rejects the whole file with a message, and nothing is stored.
+- **Phone (optional column).** The brief's format has no phone number, but agents need one to
+  call, so a file may add a `Phone` (or `Phone Number`) column; files without it import as
+  before. A number may use digits, spaces and `+ - ( ) .`, with 7 to 15 digits, and is kept as
+  written so local formats read naturally; anything else rejects the row with a reason. Agents
+  see it in **My work** as a link that dials it, and admins in **All patients** details; the
+  pool doesn't show it before a patient is claimed. A valid row's number replaces the
+  patient's saved one, even on a duplicate row, so re-importing a list with phones fills them
+  in; the preview says when a different saved number will be replaced. A blank phone changes
+  nothing.
 - **Encoding and size.** Files can be UTF-8 (with or without a BOM) or Windows-1252, which is
   what Excel often writes. The limits are 5 MB and 10,000 rows. A file with binary data in it
   (a NUL byte, as in a UTF-16 export or a renamed spreadsheet) is rejected with a message,

@@ -70,6 +70,15 @@ describe("ImportPreview", () => {
     expect(fileRow(2)).not.toHaveAccessibleDescription();
   });
 
+  it("shows a row's phone number with the patient's name", () => {
+    const withPhone = { ...row(2, "create"), values: { ...row(2, "create").values, phone: "555-0101" } };
+
+    render(<ImportPreview batch={{ ...batch, rows: [withPhone, row(3, "create")] }} />);
+
+    expect(fileRow(2)).toHaveTextContent("Jane Testperson555-0101");
+    expect(fileRow(3)).not.toHaveTextContent("555-0101");
+  });
+
   it("filters the rows by outcome", async () => {
     const user = userEvent.setup();
     render(<ImportPreview batch={batch} />);
