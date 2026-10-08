@@ -330,6 +330,9 @@ Where the brief left something open, this is the call I made.
 - **Text on teal is navy, not white.** White on `#52BDB5` is 2.3:1, and WCAG AA asks for 4.5:1.
   Navy on teal is 7.5:1, and every text color pair in the app passes AA. To match their site
   exactly instead, set `--on-brand` to `#FFFFFF`.
+- **Login photo.** The login page, and only that page, has a free Pexels photo
+  ([3756693](https://www.pexels.com/photo/3756693/)) behind the login card, under a navy-to-teal
+  wash so the white card stands out. It is resized to 2400px wide (189 KB).
 - **Red and amber are the only colors not from their site.** It has no error or warning states,
   and rejected rows and unanswered calls need them.
 - **Long values.** Names, clinics and visit types can be up to 200 characters. In the list

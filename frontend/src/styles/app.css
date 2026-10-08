@@ -1592,12 +1592,16 @@ details.record__history[open] summary {
 
 /* ---------- Login ---------- */
 
+/* The photo sits under a navy-to-teal wash, dark enough that the white card stands out. */
 .login {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
   padding: 32px 16px;
+  background:
+    linear-gradient(135deg, rgb(21 29 35 / 0.7), rgb(21 29 35 / 0.45) 55%, rgb(82 189 181 / 0.45)),
+    url("/login-background.jpg") 70% 30% / cover no-repeat;
 }
 
 .login__panel {
